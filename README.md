@@ -5,7 +5,7 @@
 # <p align="center"> Pieces Copilot Streamlit Example
 
 <p align="center">  
-The Pieces Copilot Streamlit Bot is an interactive chatbot application built using Streamlit, designed to provide users with a seamless interface to ask questions and receive answers in real-time and powered by [Pieces OS Python SDK](https://github.com/pieces-app/pieces-os-client-sdk-for-python). 
+The Pieces Copilot Streamlit Bot is an interactive chatbot application built using Streamlit, designed to provide users with a seamless interface to ask questions and receive answers in real-time and powered by <a href="https://github.com/pieces-app/pieces-os-client-sdk-for-python"> Pieces OS Python SDK </a>
 </p>
 
 
