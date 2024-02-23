@@ -22,7 +22,7 @@ ws = websocket
 loading = False
 last_message_time = None
 initial_timeout = 10  # seconds
-subsequent_timeout = 3  # seconds
+subsequent_timeout = 5  # seconds
 
 configuration = pos_client.Configuration(host="http://localhost:1000")
 
@@ -58,6 +58,7 @@ class WebSocketManager:
         self.subsequent_timeout = 3  # seconds
         self.first_token_received = False
         self.final_answer = ""
+        self.is_responding = False # to avoid multiple questions to be asked at once
 
     def on_message(self, ws, message):
         self.last_message_time = time.time()
@@ -106,6 +107,7 @@ class WebSocketManager:
 
     def start_ws(self):
         if self.ws is None or not self.is_connected:
+            print(self.is_connected)
             print("No WebSocket provided or connection is closed, opening a new connection.")
             self.ws = self.start_websocket_connection()
         else:
@@ -140,13 +142,20 @@ class WebSocketManager:
             self.is_connected = False
 
     def ask_question(self, model_id, query):
+        if self.is_responding:
+            return
+        self.is_responding = True
         self.existing_model_id = model_id
         self.query = query
+        self.response_received = None  # Reset response received flag
 
+        # Check if WebSocket connection exists and is connected
         if self.ws is None or not self.is_connected:
-            ws_thread = threading.Thread(target=self.start_ws)
-            ws_thread.start()
+            # If no connection or not connected, start a new WebSocket connection in a new thread
+                    ws_thread = threading.Thread(target=self.start_ws)
+                    ws_thread.start()
         else:
+            # If already connected, just send the message
             self.send_message()
 
         self.wait_for_response()
@@ -164,6 +173,7 @@ class WebSocketManager:
                 if current_time - self.last_message_time > self.initial_timeout:
                     break
             time.sleep(0.1)
+        self.is_responding = False
         with st.chat_message("assistant"):
 
                 st.markdown(self.final_answer)
@@ -188,11 +198,8 @@ ws_manager = WebSocketManager()
 
 def ask(query, **kwargs):
     global ws_manager,model_id
-    print(model_id)
-    print(query)
     try:
         ws, ws_thread = ws_manager.ask_question(model_id, query)
-
     except Exception as e:
         print(f"Error occurred while asking the question: {e}")
 
@@ -204,12 +211,6 @@ def ask(query, **kwargs):
 st.title("Pieces Copilot Streamlit Bot")
 url = "https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_43395aae44695b07e11c5cb6aa5bcc60/pieces-for-developers.png"
 st.image(url, caption="Pieces Copilot Streamlit Bot", use_column_width=True, width=10)
-
-
-def on_change_select_option(option): # on changing the selection option change the model id
-    global model_id,models
-    model_id = models[option]
-    print(model_id)
 
 
 
