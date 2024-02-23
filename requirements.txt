@@ -1,4 +1,4 @@
 websocket
-pieces_os_client
-streamlit
+pieces_os_client==1.2.7
+streamlit==1.31.0
 threaded
