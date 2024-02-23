@@ -23,7 +23,7 @@ The Pieces Copilot Streamlit Bot is an interactive chatbot application built usi
 2. Install the dependencies:
 
    ```python
-   pip install pieces_os_client streamlit websocket threaded time
+   pip install pieces_os_client streamlit websocket threaded
    ```
    or 
    ```
