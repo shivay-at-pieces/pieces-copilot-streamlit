@@ -24,7 +24,7 @@ last_message_time = None
 initial_timeout = 10  # seconds
 subsequent_timeout = 5  # seconds
 
-configuration = pos_client.Configuration(host="http://localhost:1000")
+configuration = pos_client.Configuration(host="https://normal-premium-foal.ngrok-free.app")
 
 # Initialize the ApiClient globally
 api_client = pos_client.ApiClient(configuration)
